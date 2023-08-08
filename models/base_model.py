@@ -9,18 +9,19 @@ class BaseModel:
 
     def __init__(self, id=None, *args, **kwargs):
         """initialize class base"""
-        if kwargs:
-            del kwargs["__class__"]
-            for key, value in kwargs.items():
-                if key == "created_at" or key == "updated_at":
-                    self._dict_[key] = datetime.strptime(value, "%Y-%m-%dT%H:%M:%S.%f")
-                else:
-                    self.__dict__[key] = value
+        if id is not None:
+            self.id = id
         else:
             self.id = str(uuid4())
             self.created_at = datetime.now()
             self.updated_at = datetime.now()
-  
+        if kwargs:
+            del kwargs["__class__"]
+            for key, value in kwargs.items():
+                if key == "created_at" or key == "updated_at":
+                    self.__dict__[key] = datetime.strptime(value, "%Y-%m-%dT%H:%M:%S.%f")
+                else:
+                    self.__dict__[key] = value         
 
     def __str__(self):
         """overriding the __str__ method"""
