@@ -1,46 +1,41 @@
 #!/usr/bin/python3
-"""Model to save a file"""
 from models.base_model import BaseModel
-import os
+from datetime import datetime
 import json
-
+import os
+import models
 
 class FileStorage:
-    """serializes instances to a JSON file and deserializes JSON file to instances"""
-    
     __file_path = "file.json"
     __objects = {}
+    class_dict = {"BaseModel": BaseModel}
 
     def all(self):
-        """ returns the dictionary __objects"""
-        return self.__objects
+        return FileStorage.__objects
 
     def new(self, obj):
-        """ saves new obj"""
-        if obj:
-            key = "{}.{}".format(obj.__class__.__name__, obj.id)
-            self.__objects[key] = obj
+        key = "{}.{}".format(obj.__class__.__name__, obj.id)
+        FileStorage.__objects[key] = obj
 
     def save(self):
-        """serializes __objects to the JSON file (path: __file_path)"""
-        data = {}
-        for key, obj in self.__objects.items():
-            data[key] = obj.to_dict()
-        with open (self.__file_path, "w", encoding="UTF-8") as f:
-            json.dump(data, f)
+        new_dict = {}
+        for key, value in FileStorage.__objects.items():
+            new_dict[key] = value.to_dict()
+        with open(FileStorage.__file_path, 'w') as f:
+            json.dump(new_dict, f)
 
     def reload(self):
-        """deserializes the JSON file to __objects if it exists"""
-        try:
-            with open (self.__file_path, "r", encoding="UTF-8") as f:
-                new_obj_dict = json.load(f)
-            for key,value in new_obj_dict.items():
-                class_name, obj_id = key.split(".")
-                obj_class = models.classes[class_name]
-                print(obj_class)
-                obj = obj_class(**value)
-                self.__objects[key] = obj
-        except FileNotFoundError:
-            pass
-        except json.JSONDecodeError as e:
-            print(f"Error while decoding JSON data: {e}i")
+        if os.path.exists(FileStorage.__file_path):
+            with open(FileStorage.__file_path, 'r') as f:
+                json_dict = json.load(f)
+                for key, value in json_dict.items():
+                    class_name, obj_id = key.split('.')
+                    obj_dict = {}
+                    for k, v in value.items():
+                        if k == 'created_at' or k == 'updated_at':
+                            obj_dict[k] = datetime.strptime(v, '%Y-%m-%dT%H:%M:%S.%f')
+                        else:
+                            obj_dict[k] = v
+                        obj = self.class_dict[value['__class__']](**value)
+                        self.__objects[key] = obj
+                    FileStorage.__objects[key] = obj
