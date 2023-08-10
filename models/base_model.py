@@ -23,10 +23,12 @@ class BaseModel:
                     self.__dict__[key] = value
 
     def save(self):
+        """ updates the public instance attribute updated_at with the current datetime"""
         self.updated_at = datetime.now()
         models.storage.save()
 
     def to_dict(self):
+        """ returns a dictionary containing all keys/values of __dict__"""
         dict_copy = self.__dict__.copy()
         dict_copy['created_at'] = self.created_at.isoformat()
         dict_copy['updated_at'] = self.updated_at.isoformat()
@@ -35,4 +37,5 @@ class BaseModel:
         return dict_copy
 
     def __str__(self):
+        """overides __str to print [<class name>] (<self.id>) <self.__dict__>"""
         return "[{}] ({}) {}".format(type(self).__name__, self.id, self.to_dict())
