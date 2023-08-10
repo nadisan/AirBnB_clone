@@ -8,25 +8,22 @@ import models
 class BaseModel:
     """ defines all common attributes/methods for other classes"""
 
-    def __init__(self, id=None, *args, **kwargs):
+    def __init__(self, *args, **kwargs):
         """initialize class base"""
 
-        date_format = "%Y-%m-%dT%H:%M:%S.%f"
-        if id is not None:
-            self.id = id
+        Date_F = "%Y-%m-%dT%H:%M:%S.%f"
+        if kwargs:
+            del kwargs["__class__"]
+            for key, value in kwargs.items():
+                if key == "created_at" or key == "updated_at":
+                    self.__dict__[key] = datetime.strptime(value, Date_F)
+                else:
+                    self.__dict__[key] = value
         else:
             self.id = str(uuid4())
             self.created_at = datetime.now()
             self.updated_at = datetime.now()
             models.storage.new(self)
-        if kwargs:
-            del kwargs["__class__"]
-            for key, value in kwargs.items():
-                if key == "created_at" or key == "updated_at":
-                    self.__dict__[key] = datetime.strptime(value,
-                                                           date_format)
-                else:
-                    self.__dict__[key] = value
 
     def save(self):
         """
@@ -46,9 +43,6 @@ class BaseModel:
         return dict_copy
 
     def __str__(self):
-        """
-        overides __str to print
-        [<class name>] (<self.id>) <self.__dict__>
-        """
+        """overriding the __str__ method"""
         return "[{}] ({}) {}".format(type(self).__name__,
-                                     self.id, self.to_dict())
+                                     self.id, self.__dict__)
