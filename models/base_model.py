@@ -18,12 +18,16 @@ class BaseModel:
             del kwargs["__class__"]
             for key, value in kwargs.items():
                 if key == "created_at" or key == "updated_at":
-                    self.__dict__[key] = datetime.strptime(value, "%Y-%m-%dT%H:%M:%S.%f")
+                    self.__dict__[key] = datetime.strptime
+                    (value, "%Y-%m-%dT%H:%M:%S.%f")
                 else:
                     self.__dict__[key] = value
 
     def save(self):
-        """ updates the public instance attribute updated_at with the current datetime"""
+        """
+        updates the public instance attribute updated_at
+        with the current datetime
+        """
         self.updated_at = datetime.now()
         models.storage.save()
 
@@ -37,5 +41,9 @@ class BaseModel:
         return dict_copy
 
     def __str__(self):
-        """overides __str to print [<class name>] (<self.id>) <self.__dict__>"""
-        return "[{}] ({}) {}".format(type(self).__name__, self.id, self.to_dict())
+        """
+        overides __str to print
+        [<class name>] (<self.id>) <self.__dict__>
+        """
+        return "[{}] ({}) {}".format(type(self).__name__,
+                                     self.id, self.to_dict())
