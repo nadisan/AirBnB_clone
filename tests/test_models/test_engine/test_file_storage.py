@@ -26,5 +26,20 @@ class TestFileStorage_init(unittest.TestCase):
         self.assertEqual(type(models.storage), FileStorage)
 
 
+class TestFileStorage_methoda(unittest.TestCase):
+    """Unittests for testing all method of the FileStorage."""
+
+    def testall_is_dict(self):
+        """test __class__ type with no arg"""
+        self.assertEqual(type(FileStorage().all()), dict)
+
+    def test_new_all(self):
+        """test new creates <obj class name>.id and is displayed by all"""
+        base = BaseModel()
+
+        self.assertIn("BaseModel." + base.id, models.storage.all().keys())
+        self.assertIn(base, models.storage.all().values())
+
+
 if __name__ == "__main__":
     unittest.main()
