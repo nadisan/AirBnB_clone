@@ -5,6 +5,8 @@ import models
 from models import storage
 from models.base_model import BaseModel
 from shlex import split
+from datetime import datetime
+
 
 def parse(line: str):
     """Splits lines by spaces"""
@@ -67,7 +69,7 @@ class HBNBCommand(cmd.Cmd):
         if len(className_line) == 0:
             print("** class name missing **")
             return
-        elif className_line[0] not in classes.keys():
+        elif className_line[0] not in classes:
             print("** class doesn't exist **")
         elif len(className_line) == 1:
             print("** instance id missing **")
