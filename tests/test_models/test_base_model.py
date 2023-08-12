@@ -36,15 +36,37 @@ class TestBaseModel_init(unittest.TestCase):
         case1 = BaseModel()
         self.assertEqual(case1.created_at, case1.updated_at)
 
-    
+
 class TestBaseModels_save(unittest.TestCase):
-    """Unittests for testing Public instance methods save   of the BaseModel class."""
+    """Unittests for testing save instance of the BaseModel"""
 
     def test_upadted_at_updates_on_save(self):
         """checks updated_at changes on save"""
         case0 = BaseModel()
         case0.save()
         self.assertNotEqual(case0.created_at, case0.updated_at)
+
+
+class TestBaseModels_to_dict(unittest.TestCase):
+    """Unittests for testing to_dict instance of BaseModel"""
+
+    def test_to_dict_is_dict_type(self):
+        """test public instance attributes to_dict is dict"""
+        self.assertEqual(type(BaseModel().to_dict()), dict)
+
+    def test_to_dict_contents(self):
+        """tests to_dict returns all key/values"""
+        self.assertIn("id", BaseModel().to_dict())
+        self.assertIn("created_at", BaseModel().to_dict())
+        self.assertIn("updated_at", BaseModel().to_dict())
+        self.assertIn("__class__", BaseModel().to_dict())
+
+    def test_to_dict_datetime_convertedto_str(self):
+        """tests to_dict datetime values are converted to str"""
+        case = BaseModel()
+        casedic = case.to_dict()
+        self.assertEqual(type(casedic["created_at"]), str)
+        self.assertEqual(type(casedic["updated_at"]), str)
 
 
 if __name__ == "__main__":
