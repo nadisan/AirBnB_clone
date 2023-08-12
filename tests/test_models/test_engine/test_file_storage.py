@@ -37,8 +37,17 @@ class TestFileStorage_methoda(unittest.TestCase):
         """test new creates <obj class name>.id and is displayed by all"""
         base = BaseModel()
 
+        models.storage.new(base)
         self.assertIn("BaseModel." + base.id, models.storage.all().keys())
         self.assertIn(base, models.storage.all().values())
+
+        with self.assertRaises(TypeError):
+            models.storage.new(base, None)
+
+    def test_save_reload(Self):
+        """test save creates <obj class name>.id and is displayed by all"""
+        base = BaseModel()
+        models.storage.save()
 
 
 if __name__ == "__main__":
