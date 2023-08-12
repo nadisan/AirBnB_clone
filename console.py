@@ -13,23 +13,29 @@ def parse(line: str):
     args = shlex.split(line)
     return args, len(args)
 
+
 class HBNBCommand(cmd.Cmd):
     """ A program that contains the entry point of the command interpreter"""
     prompt = "(hbnb) "
+
     def do_quit(self, arg):
         """Quit command to exit the program."""
         return True
-    
+
     def do_EOF(self, arg):
         """Exit the program using Ctrl+D or Ctrl+Z."""
         print()  # Print a new line before exiting
         return True
-    
+
     def emptyline(self):
         """Do nothing when an empty line is entered."""
         pass
+
     def do_create(self, line):
-        """Creates a new BaseModel instance, saves it to the JSON file and prints the id"""
+        """
+        Creates a new BaseModel instance,
+        saves it to the JSON file and prints the id
+        """
         if len(line) == 0:
             print("** class name missing **")
             return
@@ -38,8 +44,9 @@ class HBNBCommand(cmd.Cmd):
             instance = eval(string)
             print(instance.id)
             instance.save()
-        except:
+        except Exception as e:
             print("** class doesn't exist **")
+
     def help_quit(self):
         ''' help_quit '''
         print("Quit command to exit the program\n")
@@ -47,8 +54,9 @@ class HBNBCommand(cmd.Cmd):
     def help_EOF(self):
         """help_EOF"""
         print("End of File command: exit the program\n")
+
     def do_show(self, line):
-        """Prints an instance as a string based on the class and id"""    
+        """Prints an instance as a string based on the class and id"""
         className_line = line.split()
         if len(className_line) == 0:
             print("** class name missing **")
@@ -63,6 +71,7 @@ class HBNBCommand(cmd.Cmd):
                 print(models.storage.all()[instance])
             else:
                 print("** no instance found **")
+
     def do_destroy(self, line):
         """Deletes an instance based on the class and id"""
         className_line = line.split()
@@ -80,6 +89,7 @@ class HBNBCommand(cmd.Cmd):
                 models.storage.save()
             else:
                 print("** no instance found **")
+
     def do_all(self, arg):
         """Prints string representations of instances"""
         className_line = shlex.split(arg)
@@ -99,6 +109,7 @@ class HBNBCommand(cmd.Cmd):
             print("]")
         else:
             print("** class doesn't exist **")
+
     def do_update(self, line):
         """Update an instance based on the class name, id, attribute & value"""
         className_line = line.split()
@@ -113,7 +124,7 @@ class HBNBCommand(cmd.Cmd):
         else:
             instance = className_line[0] + "." + className_line[1]
             if instance not in models.storage.all():
-                            print("** no instance found **")
+                print("** no instance found **")
             elif len(className_line) < 3:
                 print("** attribute name missing **")
             elif len(className_line) < 4:
@@ -123,6 +134,7 @@ class HBNBCommand(cmd.Cmd):
                 ojb.__dict__[className_line[2]] = className_line[3]
                 ojb.updated_at = datetime.now()
                 ojb.save()
+
 
 classes = (
             "BaseModel",
