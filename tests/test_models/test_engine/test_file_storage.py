@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 """ test model for file_storage.py"""
 import unittest
+import os
 import models
 from models.engine.file_storage import FileStorage
 from models.base_model import BaseModel
@@ -44,10 +45,21 @@ class TestFileStorage_methoda(unittest.TestCase):
         with self.assertRaises(TypeError):
             models.storage.new(base, None)
 
-    def test_save_reload(Self):
+    def test_save_reload(self):
         """test save creates <obj class name>.id and is displayed by all"""
         base = BaseModel()
+
+        models.storage.new(base)
         models.storage.save()
+        save_test = ""
+
+        with open("file.json", "r") as f:
+            save_test = f.read()
+
+        self.assertIn("BaseModel." + base.id, save_test)
+
+        with self.assertRaises(TypeError):
+            models.storage.save(base)
 
 
 if __name__ == "__main__":
