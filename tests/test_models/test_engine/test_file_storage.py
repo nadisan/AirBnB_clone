@@ -45,7 +45,7 @@ class TestFileStorage_methoda(unittest.TestCase):
         with self.assertRaises(TypeError):
             models.storage.new(base, None)
 
-    def test_save_reload(self):
+    def test_save(self):
         """test save creates <obj class name>.id and is displayed by all"""
         base = BaseModel()
 
@@ -60,6 +60,24 @@ class TestFileStorage_methoda(unittest.TestCase):
 
         with self.assertRaises(TypeError):
             models.storage.save(base)
+
+    def test_save_reload(self):
+        """test save creates <obj class name>.id and is displayed by all"""
+        new_f = FileStorage()
+
+        try:
+            os.remove("file.json")
+        except FileNotFoundError:
+            pass
+        with open("file.json", "w") as f:
+            f.write("{}")
+        with open("file.json", "r") as r:
+            for line in r:
+                self.assertEqual(line, "{}")
+        self.assertIs(new_f.reload(), None)
+
+        with self.assertRaises(TypeError):
+            models.storage.reload(None)
 
 
 if __name__ == "__main__":
