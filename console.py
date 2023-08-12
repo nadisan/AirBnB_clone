@@ -1,4 +1,5 @@
 #!/usr/bin/python3
+"""This HBNBCommand class"""
 import cmd
 import shlex
 import models
@@ -6,6 +7,12 @@ from models import storage
 from models.base_model import BaseModel
 from shlex import split
 from datetime import datetime
+from models.user import User
+from models.state import State
+from models.city import City
+from models.place import Place
+from models.amenity import Amenity
+from models.review import Review
 
 
 def parse(line: str):
@@ -61,7 +68,7 @@ class HBNBCommand(cmd.Cmd):
         if len(className_line) == 0:
             print("** class name missing **")
             return
-        elif className_line[0] not in classes:
+        elif className_line[0] not in HBNBCommand.classes.keys():
             print("** class doesn't exist **")
         elif len(className_line) == 1:
             print("** instance id missing **")
@@ -78,7 +85,7 @@ class HBNBCommand(cmd.Cmd):
         if len(className_line) == 0:
             print("** class name missing **")
             return
-        elif className_line[0] not in classes:
+        elif className_line[0] not in HBNBCommand.classes.keys():
             print("** class doesn't exist **")
         elif len(className_line) == 1:
             print("** instance id missing **")
@@ -100,7 +107,7 @@ class HBNBCommand(cmd.Cmd):
             print("[", end="")
             print(", ".join(obj_list), end="")
             print("]")
-        elif className_line[0] in classes:
+        elif className_line[0] in HBNBCommand.classes.keys():
             for key in models.storage.all():
                 if className_line[0] in key:
                     obj_list.append(str(models.storage.all()[key]))
@@ -117,7 +124,7 @@ class HBNBCommand(cmd.Cmd):
         objects = models.storage.all()
         if not line:
             print("** class name missing **")
-        elif className_line[0] not in classes:
+        elif className_line[0] not in HBNBCommand.classes.keys():
             print("** class doesn't exist **")
         elif len(className_line) == 1:
             print("** instance id missing **")
@@ -134,12 +141,16 @@ class HBNBCommand(cmd.Cmd):
                 ojb.__dict__[className_line[2]] = className_line[3]
                 ojb.updated_at = datetime.now()
                 ojb.save()
+    classes = {
+        "BaseModel": BaseModel,
+        "User": User,
+        "State": State,
+        "City": City,
+        "Amenity": Amenity,
+        "Place": Place,
+        "Review": Review
+            }
 
 
-classes = (
-            "BaseModel",
-            "User", "City", "State", "Place",
-            "Amenity", "Review"
-            )
 if __name__ == '__main__':
     HBNBCommand().cmdloop()
