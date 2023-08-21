@@ -1,0 +1,12 @@
+Footer {
+	position: fixed;
+    	bottom: 0;
+   	color: white;
+   	align-items: center;
+	height: 60px;
+    	width: 100%;
+    	border-top: 1px #CCCCCC;
+    	}
+p {
+	align-items: center;
+  }	
